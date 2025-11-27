@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rancho Tracker</title>
+  <meta name="theme-color" content="#0ea5a4">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%230ea5a4'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="app.css" />
+
+  <!-- Layout simple de la barra superior -->
+  <style>
+    .topbar{
+      display:grid;
+      gap:10px;
+      align-items:center;
+    }
+    @media (max-width: 768px){
+      .topbar{ grid-template-columns: 1fr; }
+    }
+    @media (min-width: 769px){
+      .topbar{ grid-template-columns: 1fr auto; }
+    }
+  </style>
+
+  <!-- Leaflet LOCAL (recuerda subir leaflet.css y leaflet.js al ESP32) -->
+  <link rel="stylesheet" href="leaflet.css" />
+  <script defer src="leaflet.js"></script>
+
+  <!-- App -->
+<script defer src="app.js"></script>
+</head>
+<body>
+  <header class="container">
+    <div class="topbar">
+      <div class="brand">
+        <div>
+          <h1>Rancho Tracker</h1>
+          <div style="color:#64748b;font-size:13px;margin-top:2px">
+            Monitoreo LoRa (Long Range) • Modo local / offline
+          </div>
+        </div>
+        <div class="legend-card">
+          <div class="row"><span class="dot ok"></span> Fix OK</div>
+          <div class="row"><span class="dot warn"></span> Batería baja</div>
+          <div class="row"><span class="dot red"></span> Sin fix</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <!-- Fila 1 -->
+        <button id="btnAuto" class="btn" type="button">🔁 Auto</button>
+        <button id="btnDark" class="btn" type="button" title="Modo oscuro">🌙</button>
+        <button id="btnCSV" class="btn" type="button" title="Descargar CSV">⬇️ CSV</button>
+
+        <!-- Fila 2 -->
+        <button id="btnFence" class="btn is-off" type="button" title="Alertas geocerca">
+          Alertas: OFF
+        </button>
+        <select id="fenceDist" class="btn" title="Distancia al borde (m)">
+          <option value="15">15 m</option>
+          <option value="25">25 m</option>
+          <option value="40">40 m</option>
+          <option value="60" selected>60 m</option>
+        </select>
+
+        <!-- Menú “Más” -->
+        <div class="menu">
+          <button id="btnMore" class="btn" type="button"
+                  aria-haspopup="true" aria-expanded="false">
+            Más
+          </button>
+          <div id="moreMenu" class="menu-panel" role="menu" hidden>
+            <button id="btnAdd"   class="menu-item" type="button">➕ Agregar vaca</button>
+            <button id="btnDel"   class="menu-item" type="button">➖ Eliminar vaca</button>
+            <!-- <button id="btnWifi"  class="menu-item" type="button">📶 Apagar Wi-Fi</button>-->
+            <button id="btnReset" class="menu-item" type="button">🧹 Reset de registros</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="panel">
+      <input id="filtro" placeholder="Filtrar por ID…" />
+      <table id="lista">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th class="col-hora">Hora</th>
+            <th>Batería</th>
+            <th>RSSI</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </aside>
+
+    <div class="map-wrap">
+      <section id="map"></section>
+    </div>
+  </main>
+
+  <footer>
+    <small>ESP32 • Leaflet • LoRa (Long Range)</small>
+  </footer>
+</body>
+</html>

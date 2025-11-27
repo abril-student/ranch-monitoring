@@ -1,0 +1,500 @@
+/* ===== Variables, colores y tipografía ===== */
+:root{
+  --bg:#0b0e11; --fg:#0f172a; --muted:#64748b;
+  --brand:#0ea5a4; --brand-600:#0d9488; --brand-700:#0f766e;
+  --surface:#ffffff; --surface-2:#f8fafc; --border:#e5e7eb;
+  --ok:#10b981; --bad:#ef4444; --warn:#f59e0b;
+
+  --header-h: 96px;      /* altura aproximada del header */
+  --panel-pad: 10px;
+}
+
+/* ===== Base ===== */
+html,body{
+  height:100%;
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  color: var(--fg);
+  background: var(--surface);
+}
+body{
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr; /* header + main */
+}
+
+/* ===== Header, marca y controles ===== */
+header{
+  position: sticky;
+  top: 0;
+  z-index: 5000; /* por encima del mapa y panes de Leaflet */
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  background: linear-gradient(180deg, #fff, #fff0);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: saturate(140%) blur(6px);
+}
+header h1{
+  margin:0;
+  font-size:22px;
+  font-weight:700;
+  letter-spacing:.2px;
+}
+header .sub{
+  margin-top: 2px;
+  font-size:13px;
+  color: var(--muted);
+}
+
+/* Marca + leyenda compacta */
+.brand{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+}
+.legend-card{
+  margin-left: auto;          /* se pega a la derecha del título */
+  flex: 0 0 auto;             /* no crece */
+  inline-size: max-content;   /* ancho = contenido */
+  max-inline-size: 260px;     /* techo para no excederse */
+  padding: 10px 12px;
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(2,8,23,.10);
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  font-size:14px;
+  color:#334155;
+}
+.legend-card .row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  line-height:1.15;
+  white-space: nowrap;        /* evita romper "batería baja" */
+}
+.legend-card .dot{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  display:inline-block;
+  flex:0 0 12px;
+  box-shadow:0 0 0 2px #fff inset, 0 0 0 1px rgba(0,0,0,.06);
+}
+.legend-card .dot.ok{   background:#10b981; }
+.legend-card .dot.warn{ background:#f59e0b; }
+.legend-card .dot.red{  background:#ef4444; }
+
+/* Controles (desktop por defecto) */
+.controls{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  overflow:visible;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  height:36px;
+  padding:0 10px;
+  border-radius:10px;
+  border:1px solid rgba(0,0,0,.08);
+  background:#fff;
+  font-size:15px;
+  cursor:pointer;
+}
+.btn:hover{
+  box-shadow:0 2px 10px rgba(2,6,23,.08);
+  border-color:#d1d5db;
+}
+.btn:active{ transform:translateY(1px); }
+.btn.primary{
+  background:var(--brand);
+  color:#fff;
+  border-color:var(--brand-600);
+}
+.btn.primary:hover{
+  background:var(--brand-600);
+  border-color:var(--brand-700);
+}
+
+/* ===== Layout: lista + mapa ===== */
+main{
+  display:grid;
+  grid-template-columns: auto 1fr;  /* aside ajustable + mapa */
+  grid-template-rows: 1fr;
+  gap:16px;
+  padding:12px 16px;
+  align-items:stretch;
+}
+aside{
+  grid-column: 1;
+  width: clamp(320px, 34vw, 560px);
+  min-width: 280px;
+  max-width: 70vw;
+  resize: horizontal;
+  padding: var(--panel-pad);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: auto;
+  box-shadow: 0 2px 16px rgba(2,6,23,.04);
+}
+
+.map-wrap{
+  grid-column: 2;
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  position: relative;
+}
+#map{
+  width:100%;
+  height:100%;
+  min-height:320px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  overflow:hidden;
+  box-shadow:0 2px 16px rgba(2,6,23,.04);
+}
+/* Leaflet ocupa exactamente el tamaño de #map */
+.leaflet-container{
+  width: 100%;
+  height: 100%;
+  display: block;
+  margin: 0;
+  border-radius: 10px;
+}
+.leaflet-control{ z-index:401; }
+
+/* ===== Buscador ===== */
+#filtro{
+  display:block;
+  width: 100%;
+  box-sizing: border-box;
+  margin:0 0 var(--panel-pad);
+  padding:8px 10px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  outline:none;
+  background:#fff;
+}
+#filtro:focus{
+  border-color:var(--brand);
+  box-shadow:0 0 0 3px rgba(14,165,164,.15);
+}
+
+/* ===== Tabla ===== */
+#lista{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+}
+#lista thead th{
+  position:sticky;
+  top:var(--panel-pad);
+  z-index:1;
+  background:var(--surface-2);
+  text-align:left;
+  font-size:12px;
+  letter-spacing:.3px;
+  text-transform:uppercase;
+  color:var(--muted);
+  border-bottom:1px solid var(--border);
+}
+#lista th,
+#lista td{
+  padding:10px 12px;
+}
+th.col-hora,
+td.col-hora{
+  width: calc(10ch + 24px);
+}
+#lista tbody tr:nth-child(even){ background:#fbfdff; }
+#lista tbody tr:hover{ background:#f1f5f9; }
+#lista tbody tr{
+  cursor:pointer;
+}
+#lista tbody tr.sel{
+  background:#e6f7f7 !important;
+}
+
+/* ID compuesto */
+.cell-id .id-strong{
+  font-weight:700;
+  line-height:1.15;
+  font-size:16px;
+}
+.cell-id .id-muted{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.1;
+}
+
+/* Hora en dos líneas, dígitos alineados */
+.col-hora{
+  font-variant-numeric:tabular-nums;
+  line-height: 1.15;
+}
+.col-hora .fecha,
+.col-hora .hora{
+  display:block;
+  white-space:nowrap;
+}
+
+/* Batería: tooltip con voltaje */
+td.batt{
+  position:relative;
+}
+td.batt::after{
+  content:"";
+  opacity:0;
+  transition:opacity .15s;
+  margin-left:6px;
+  color:var(--muted);
+}
+td.batt:hover::after{
+  content:" (" attr(data-volt) ")";
+  opacity:1;
+}
+
+/* Badges de estado */
+.badge{
+  display:inline-block;
+  padding:3px 8px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+}
+.badge.ok{
+  background:rgba(16,185,129,.12);
+  color:#065f46;
+  border:1px solid rgba(16,185,129,.25);
+}
+.badge.nofix{
+  background:rgba(239,68,68,.12);
+  color:#7f1d1d;
+  border:1px solid rgba(239,68,68,.25);
+}
+.badge.warn{
+  background:rgba(245,158,11,.12);
+  color:#7c2d12;
+  border:1px solid rgba(245,158,11,.25);
+}
+
+/* ===== Varios ===== */
+.empty{
+  color:var(--muted);
+  text-align:center;
+  padding:24px 12px;
+  font-size:14px;
+}
+
+/* ===== Modo oscuro ===== */
+body.dark{
+  background:#0b1220;
+  color:#e5e7eb;
+}
+body.dark header{
+  background:linear-gradient(180deg, #0b1220, #0b122000);
+  border-bottom-color:#1f2937;
+}
+body.dark aside{
+  background:#0e1628;
+  border-color:#1f2937;
+  box-shadow:none;
+}
+body.dark #map{ border-color:#1f2937; }
+body.dark #filtro{
+  background:#0b1220;
+  color:#e5e7eb;
+  border-color:#1f2937;
+}
+body.dark #filtro:focus{
+  border-color:var(--brand-700);
+  box-shadow:0 0 0 3px rgba(15,118,110,.25);
+}
+body.dark #lista thead th{
+  background:#0b1226;
+  border-bottom-color:#1f2937;
+  color:#94a3b8;
+}
+body.dark #lista tbody tr:nth-child(even){ background:#0c1322; }
+body.dark #lista tbody tr:hover{ background:#0f192d; }
+body.dark #lista tbody tr.sel{ background:#0f2a2a !important; }
+body.dark .legend-card{
+  background: rgba(255,255,255,.06);
+  border-color:#1f2937;
+  box-shadow:none;
+}
+
+/* La leyenda puede ocupar ancho automático (útil en pantallas chicas) */
+.legend-card{
+  margin-left:0;
+  inline-size:auto;
+}
+
+/* Popup compacto para markers */
+.leaflet-popup-content{
+  margin: 8px 10px;
+}
+.rgw-popup .mk-popup{
+  max-width: 260px;
+}
+.rgw-popup .mk-title{
+  font-weight: 700;
+  margin-bottom: 2px;
+  line-height: 1.1;
+}
+.rgw-popup .mk-meta{
+  font-size: 12px;
+  color: var(--muted, #64748b);
+  margin-bottom: 4px;
+}
+.rgw-popup .mk-row{
+  font-size: 14px;
+  line-height: 1.25;
+  word-break: break-word;
+}
+@media (max-width: 420px){
+  .rgw-popup .mk-popup{ max-width: 220px; }
+}
+
+/* ===== Menú “Más” ===== */
+.controls .menu{
+  position: relative;
+  overflow: visible;
+}
+.controls .menu > .btn{
+  width:auto;
+}
+
+/* Panel del menú desplegable */
+.menu-panel{
+  position:absolute;
+  right:0;
+  left:auto;
+  top:44px;
+  min-width:200px;
+  max-width:260px;
+  background:#fff;
+  border:1px solid rgba(0,0,0,.1);
+  border-radius:12px;
+  box-shadow:0 10px 28px rgba(15,23,42,.22);
+  padding:4px 0;
+  z-index:6000;
+}
+.menu-panel[hidden]{ display:none; }
+
+/* Ítems del menú: lista de ancho parejo */
+.menu-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 12px;
+  font-size:15px;
+  width:100%;
+  border:0;
+  background:transparent;
+  text-align:left;
+  cursor:pointer;
+}
+.menu-item:focus,
+.menu-item:hover,
+.menu-item:active{
+  outline:none;
+  background:#f1f5f9;
+}
+
+/* Estados suaves para el botón de Alertas */
+.btn.is-on{
+  background: rgba(16,185,129,.12);
+  border-color: rgba(16,185,129,.25);
+  color: #065f46;
+}
+.btn.is-off{
+  background: rgba(239,68,68,.10);
+  border-color: rgba(239,68,68,.22);
+  color: #7f1d1d;
+}
+
+/* Centrar texto del <select> */
+select.btn{
+  text-align: center;
+  text-align-last: center;  /* Chrome/Edge */
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 22px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px){
+  header{
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+  }
+  main{
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr; /* aside arriba, mapa abajo */
+    height: calc(100vh - var(--header-h));
+  }
+  aside{
+    grid-column:1;
+    grid-row:1;
+    width:auto;
+    min-width:0;
+    max-width:none;
+    resize:none;
+  }
+  .map-wrap{
+    grid-column:1;
+    grid-row:2;
+  }
+  #map{ min-width: 0; }
+
+  /* Controles en grilla para móvil */
+  .controls{
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    width: 100%;
+    align-items: stretch;
+    justify-items: stretch;
+  }
+
+  /* Botones ocupan toda su celda en móvil */
+  .controls .btn,
+  .controls select.btn{
+    width:100%;
+    height:40px;
+    justify-content:center;
+  }
+  /* Asegura que el botón "Más" también llene su celda */
+  .controls .menu > .btn{
+    width:100%;
+  }
+
+  /* Ubicación exacta de cada botón en la grilla */
+  #btnAuto{ grid-column:1; grid-row:1; }
+  #btnDark{ grid-column:2; grid-row:1; }
+  #btnCSV { grid-column:3; grid-row:1; }
+}
+
+@media (max-width: 768px){
+  /* tamaño del mapa un poco menor en móvil */
+  .map-wrap{ height:auto; }
+  #map{ height: 360px; }
+}
+
+@media (max-width: 420px){
+  .btn{ padding: 0 8px; }   /* más angostos si hace falta */
+  #lista td{ font-size:13px; }
+  .col-hora .fecha{ display:none; } /* solo hora en móvil pequeño */
+}
